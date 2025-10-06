@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LocalFresh - Hyperlocal Grocery & Meal Kits</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+  body { background:#f4f7f6; color:#333; }
+  header { background: linear-gradient(90deg, #56ab2f, #a8e063); color:white; padding:20px 50px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:1000; box-shadow:0 5px 15px rgba(0,0,0,0.1); }
+  header h1 { font-weight:700; letter-spacing:1px; }
+  nav a { color:white; margin-left:25px; text-decoration:none; font-weight:600; transition:0.3s; }
+  nav a:hover { text-decoration:underline; }
+
+  .hero { background:url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080') no-repeat center/cover; padding:120px 20px; text-align:center; color:white; text-shadow:1px 1px 6px rgba(0,0,0,0.7); }
+  .hero h1 { font-size:3rem; margin-bottom:20px; }
+  .hero p { font-size:1.2rem; margin-bottom:30px; }
+  .hero button { background:#fff;color:#4CAF50;border:none;padding:15px 30px;font-size:1rem;font-weight:600;border-radius:30px;cursor:pointer;transition:0.3s; }
+  .hero button:hover { background:#f1f1f1; transform:scale(1.05); }
+
+  .filters { display:flex; justify-content:center; margin:30px 0; flex-wrap:wrap; }
+  .filters button { background:#e0e0e0; border:none; margin:5px; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:600; transition:0.3s; }
+  .filters button.active, .filters button:hover { background:#4CAF50; color:white; }
+
+  .products { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:25px; padding:0 50px 50px; }
+  .product-card { background:white; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.1); overflow:hidden; transition:0.3s; display:flex; flex-direction:column; }
+  .product-card:hover { transform:translateY(-5px); box-shadow:0 10px 25px rgba(0,0,0,0.15); }
+  .product-card img { width:100%; height:200px; object-fit:cover; }
+  .product-info { padding:20px; flex:1; display:flex; flex-direction: column; justify-content: space-between; }
+  .product-info h3 { margin-bottom:10px; font-size:1.2rem; }
+  .product-info p { margin-bottom:15px; font-weight:600; color:#4CAF50; font-size:1rem; }
+  .product-info button { background:#4CAF50;color:white;border:none;padding:10px;border-radius:10px;cursor:pointer;font-weight:600;transition:0.3s; }
+  .product-info button:hover { background:#45a049; }
+
+  .cart { position: fixed; top:0; right:0; width:300px; height:100%; background:white; box-shadow:-5px 0 25px rgba(0,0,0,0.2); padding:20px; transform:translateX(100%); transition:0.3s; display:flex; flex-direction:column; z-index:1001; }
+  .cart.active { transform:translateX(0); }
+  .cart h3 { margin-bottom:15px; }
+  .cart ul { list-style:none; flex:1; overflow-y:auto; }
+  .cart li { display:flex; justify-content: space-between; margin-bottom:10px; }
+  .cart button { background:#ff4d4d; border:none; color:white; padding:5px 10px; border-radius:5px; cursor:pointer; }
+  .cart-toggle { position: fixed; top:50%; right:0; background:#4CAF50; color:white; padding:15px; border-radius:10px 0 0 10px; cursor:pointer; font-weight:600; z-index:1002; transform:translateY(-50%); }
+
+  @media(max-width:768px){ header{flex-direction:column;text-align:center;} .hero h1{font-size:2.2rem;} .products{padding:0 20px 50px; gap:15px;} .cart{width:80%;} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>LocalFresh</h1>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Products</a>
+    <a href="#">About</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Fresh groceries & meal kits from your neighborhood!</h1>
+  <p>Order today and get the freshest ingredients delivered to your doorstep.</p>
+  <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Shop Now</button>
+</section>
+
+<div class="filters">
+  <button class="active" onclick="filterProducts('all')">All</button>
+  <button onclick="filterProducts('grocery')">Groceries</button>
+  <button onclick="filterProducts('meal')">Meal Kits</button>
+</div>
+
+<section class="products" id="products">
+</section>
+
+<div class="cart" id="cart">
+  <h3>Cart</h3>
+  <ul id="cart-items"></ul>
+  <p>Total: ₹<span id="total">0</span></p>
+  <button onclick="goToCheckout()">Checkout</button>
+</div>
+
+<div class="cart-toggle" onclick="toggleCart()">Cart 🛒</div>
+
+<script>
+const products = [
+  {id:1,name:"Organic Veggie Box",price:1800,img:"https://images.unsplash.com/photo-1617196030736-0582035bc159?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",category:"grocery"},
+  {id:2,name:"Meal Kit: Pasta Primavera",price:1200,img:"https://images.unsplash.com/photo-1617196030479-32e83aa75e6e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",category:"meal"},
+  {id:3,name:"Fresh Fruit Basket",price:1500,img:"https://images.unsplash.com/photo-1603354353516-5a0e56c7e6ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",category:"grocery"},
+  {id:4,name:"Meal Kit: Chicken Curry",price:1350,img:"https://images.unsplash.com/photo-1604908177728-0a1f2e91dc19?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",category:"meal"},
+  {id:5,name:"Organic Eggs Dozen",price:300,img:"https://images.unsplash.com/photo-1589927986089-35812389fccd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",category:"grocery"},
+  {id:6,name:"Meal Kit: Tacos",price:1100,img:"https://images.unsplash.com/photo-1600891964504-8db60a3c7d63?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",category:"meal"},
+];
+
+let cart = [];
+
+function renderProducts(filter="all"){
+  const container = document.getElementById("products");
+  container.innerHTML="";
+  products.filter(p => filter==="all" || p.category===filter).forEach(product=>{
+    const card=document.createElement("div");
+    card.className="product-card";
+    card.innerHTML=`
+      <img src="${product.img}" alt="${product.name}">
+      <div class="product-info">
+        <h3>${product.name}</h3>
+        <p>₹${product.price}</p>
+        <button onclick="addToCart(${product.id})">Add to Cart</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function addToCart(id){
+  const product = products.find(p=>p.id===id);
+  cart.push(product);
+  renderCart();
+}
+
+function renderCart(){
+  const list = document.getElementById("cart-items");
+  list.innerHTML="";
+  let total=0;
+  cart.forEach((item,index)=>{
+    const li=document.createElement("li");
+    li.innerHTML=`${item.name} - ₹${item.price} <button onclick="removeFromCart(${index})">x</button>`;
+    list.appendChild(li);
+    total+=item.price;
+  });
+  document.getElementById("total").textContent=total;
+}
+
+function removeFromCart(index){
+  cart.splice(index,1);
+  renderCart();
+}
+
+function toggleCart(){
+  document.getElementById("cart").classList.toggle("active");
+}
+
+function filterProducts(category){
+  document.querySelectorAll(".filters button").forEach(btn=>btn.classList.remove("active"));
+  event.target.classList.add("active");
+  renderProducts(category);
+}
+
+// Transfer cart to checkout page
+function goToCheckout(){
+  if(cart.length === 0){ alert("Cart is empty!"); return; }
+  localStorage.setItem("cart", JSON.stringify(cart));
+  window.location.href = "checkout.html";
+}
+
+renderProducts();
+</script>
+
+</body>
+</html>
