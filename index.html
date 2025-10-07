@@ -67,8 +67,7 @@
   <button onclick="filterProducts('meal')">Meal Kits</button>
 </div>
 
-<section class="products" id="products">
-</section>
+<section class="products" id="products"></section>
 
 <div class="cart" id="cart">
   <h3>Cart</h3>
@@ -81,21 +80,12 @@
 
 <script>
 const products = [
-<<<<<<< HEAD
-  {id:1,name:"Organic Veggie Box",price:120,img:""C:\Users\Ayush\OneDrive\Desktop\Localbite1\veggie box.webp"",category:"grocery"},
-  {id:2,name:"Meal Kit: Pasta Primavera",price:600,img:""C:\Users\Ayush\OneDrive\Desktop\Localbite1\meal kit1.webp"",category:"meal"},
-  {id:3,name:"Fresh Fruit Basket",price:110,img:""C:\Users\Ayush\OneDrive\Desktop\Localbite1\fruit basket.jpeg"",category:"grocery"},
-  {id:4,name:"Meal Kit: Chicken Curry",price:950,img:""C:\Users\Ayush\OneDrive\Desktop\Localbite1\chicken curry.jpeg"",category:"meal"},
-  {id:5,name:"Organic Eggs Dozen",price:140,img:""C:\Users\Ayush\OneDrive\Desktop\Localbite1\egg.jpeg"",category:"grocery"},
-  {id:6,name:"Meal Kit: Tacos",price:850,img:""C:\Users\Ayush\OneDrive\Desktop\Localbite1\taco.webp"",category:"meal"},
-=======
-  {id:1,name:"Organic Veggie Box",price:140,img:"veggie box.webp",category:"grocery"},
-  {id:2,name:"Meal Kit: Pasta Primavera",price:950,img:"meal kit1.webp",category:"meal"},
-  {id:3,name:"Fresh Fruit Basket",price:99,img:"fruit basket.jpeg",category:"grocery"},
-  {id:4,name:"Meal Kit: Chicken Curry",price:850,img:"chicken curry.jpeg",category:"meal"},
-  {id:5,name:"Organic Eggs Dozen",price:120,img:"egg.jpeg",category:"grocery"},
-  {id:6,name:"Meal Kit: Tacos",price:800,img:"taco.webp",category:"meal"},
->>>>>>> 091ad6f (Your commit message here)
+  {id:1,name:"Organic Veggie Box",price:120,img:"veggie box.webp",category:"grocery"},
+  {id:2,name:"Meal Kit: Pasta Primavera",price:600,img:"meal kit1.webp",category:"meal"},
+  {id:3,name:"Fresh Fruit Basket",price:110,img:"fruit basket.jpeg",category:"grocery"},
+  {id:4,name:"Meal Kit: Chicken Curry",price:950,img:"chicken curry.jpeg",category:"meal"},
+  {id:5,name:"Organic Eggs Dozen",price:140,img:"egg.jpeg",category:"grocery"},
+  {id:6,name:"Meal Kit: Tacos",price:850,img:"taco.webp",category:"meal"}
 ];
 
 let cart = [];
@@ -152,7 +142,6 @@ function filterProducts(category){
   renderProducts(category);
 }
 
-// Transfer cart to checkout page
 function goToCheckout(){
   if(cart.length === 0){ alert("Cart is empty!"); return; }
   localStorage.setItem("cart", JSON.stringify(cart));
@@ -161,6 +150,5 @@ function goToCheckout(){
 
 renderProducts();
 </script>
-
 </body>
 </html>
