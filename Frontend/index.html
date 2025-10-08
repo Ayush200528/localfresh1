@@ -1,0 +1,352 @@
+<!--
+FILE: index.html
+This single-file demo contains an improved landing + product listing page with many features:
+- Search bar
+- Sort dropdown (price asc/desc, newest)
+- Category filters
+- Product quantity selector
+- Cart with item quantities, persistent in localStorage
+- Cart count badge on floating cart button
+- Wishlist (favorites) persisted
+- Coupon code support (LOCAL10 = 10% off)
+- Toast notifications
+- Lazy-loading images
+- Accessible attributes and keyboard focus styles
+- SEO meta tags and favicon placeholder link
+
+To preview: save this portion (from <!DOCTYPE html> to </html>) as index.html and open in browser.
+-->
+
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="LocalFresh - hyperlocal groceries & meal kits. Fresh ingredients delivered to your doorstep.">
+  <title>LocalFresh - Hyperlocal Grocery & Meal Kits</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#4CAF50; --accent-2:#56ab2f; --bg:#f4f7f6; --card:#fff; --muted:#6b7280;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Poppins',sans-serif;background:var(--bg);color:#111;}
+    header{background:linear-gradient(90deg,var(--accent-2),#a8e063);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:50}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand h1{font-size:1.1rem;margin:0;font-weight:700}
+    nav{display:flex;gap:14px}
+    nav a{color:inherit;text-decoration:none;font-weight:600}
+
+    .controls{display:flex;gap:12px;align-items:center}
+    .search{display:flex;align-items:center;background:#fff;padding:6px;border-radius:10px;min-width:200px}
+    .search input{border:0;outline:0;padding:6px 8px;font-size:0.95rem;background:transparent}
+    .select, .sort{padding:8px;border-radius:8px;border:0}
+
+    .hero{background-image:url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400');background-size:cover;background-position:center;color:#fff;padding:80px 20px;text-align:center}
+    .hero h2{font-size:2rem;margin-bottom:10px;text-shadow:0 3px 15px rgba(0,0,0,0.45)}
+    .hero p{opacity:0.95;margin-bottom:18px}
+    .hero .cta{background:#fff;color:var(--accent);border:none;padding:12px 22px;border-radius:28px;font-weight:700;cursor:pointer}
+
+    .container{max-width:1200px;margin:24px auto;padding:0 18px}
+    .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px}
+    .filters{display:flex;gap:8px;flex-wrap:wrap}
+    .filter-btn{background:#ececec;border:0;padding:8px 14px;border-radius:20px;font-weight:600;cursor:pointer}
+    .filter-btn.active{background:var(--accent);color:#fff}
+
+    .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+    .card{background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(10,10,10,0.06);display:flex;flex-direction:column}
+    .card img{width:100%;height:180px;object-fit:cover;display:block}
+    .card-body{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}
+    .card h3{margin:0;font-size:1.05rem}
+    .price{color:var(--accent);font-weight:700}
+    .actions{margin-top:auto;display:flex;gap:8px;align-items:center}
+    .btn{background:var(--accent);color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+    .btn.secondary{background:#eee;color:#111}
+
+    .cart-toggle{position:fixed;right:12px;bottom:18px;background:var(--accent);color:#fff;padding:12px 14px;border-radius:999px;display:flex;align-items:center;gap:8px;z-index:60;box-shadow:0 8px 30px rgba(0,0,0,0.12);cursor:pointer}
+    .cart-count{background:#fff;color:var(--accent);padding:4px 8px;border-radius:999px;font-weight:700}
+
+    .cart-drawer{position:fixed;right:0;top:0;height:100%;width:360px;max-width:95%;background:#fff;box-shadow:-12px 0 40px rgba(0,0,0,0.15);transform:translateX(110%);transition:transform .32s ease;z-index:80;display:flex;flex-direction:column}
+    .cart-drawer.open{transform:translateX(0)}
+    .cart-head{padding:18px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+    .cart-list{padding:12px;overflow:auto;flex:1}
+    .cart-item{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px dashed #f0f0f0}
+    .cart-item img{width:64px;height:64px;object-fit:cover;border-radius:8px}
+    .qty{display:flex;gap:6px;align-items:center}
+    .qty button{padding:6px 8px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer}
+    .checkout{padding:14px;border-top:1px solid #eee}
+    .coupon{display:flex;gap:8px;margin-bottom:8px}
+    .coupon input{flex:1;padding:8px;border-radius:8px;border:1px solid #ddd}
+
+    .wishlist{margin-left:auto}
+
+    /* toast */
+    .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:36px;background:#111;color:#fff;padding:10px 14px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:100}
+    .toast.show{opacity:1;pointer-events:auto}
+
+    /* small screens */
+    @media(max-width:720px){.controls{display:none}.hero{padding:48px 12px}.card img{height:160px}.cart-drawer{width:92%}}
+
+    /* focus styles for accessibility */
+    :focus{outline:3px solid rgba(76,175,80,0.25);outline-offset:2px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect width="24" height="24" rx="6" fill="#fff" opacity="0.12"></rect><path d="M6 14c1.33-1.8 3-3 6-3s4.67 1.2 6 3" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <h1>LocalFresh</h1>
+    </div>
+    <div class="controls" role="region" aria-label="site controls">
+      <div class="search" role="search">
+        <input id="search" type="search" placeholder="Search products, e.g., pasta" aria-label="Search products">
+      </div>
+      <select id="sort" class="sort" aria-label="Sort products">
+        <option value="new">Newest</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+      </select>
+      <button class="btn" id="cta-shop" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Shop Now</button>
+    </div>
+  </header>
+
+  <section class="hero" aria-hidden="false">
+    <div class="container">
+      <h2>Fresh groceries & meal kits from your neighborhood!</h2>
+      <p>Order today and get farm-fresh ingredients delivered. Small delivery fee for orders under ₹500.</p>
+    </div>
+  </section>
+
+  <main class="container">
+    <div class="toolbar">
+      <div class="filters" role="tablist" aria-label="Product categories">
+        <button class="filter-btn active" data-cat="all">All</button>
+        <button class="filter-btn" data-cat="grocery">Groceries</button>
+        <button class="filter-btn" data-cat="meal">Meal Kits</button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="filter-btn" id="favorites-toggle" aria-pressed="false">❤️ Favorites</button>
+        <div style="color:var(--muted);font-weight:600">Showing <span id="count">0</span> products</div>
+      </div>
+    </div>
+
+    <section class="products" id="products" aria-live="polite"></section>
+  </main>
+
+  <div class="cart-toggle" id="cartToggle" aria-controls="cartDrawer" aria-expanded="false" tabindex="0">
+    <div>Cart 🛒</div>
+    <div class="cart-count" id="cart-count" aria-hidden="false">0</div>
+  </div>
+
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="false" aria-label="Shopping cart">
+    <div class="cart-head">
+      <strong>Cart</strong>
+      <div>
+        <button class="filter-btn" id="clear-cart">Clear</button>
+        <button class="filter-btn" id="close-cart">Close</button>
+      </div>
+    </div>
+    <div class="cart-list" id="cart-list"></div>
+    <div class="checkout">
+      <div class="coupon">
+        <input id="coupon" placeholder="Have a coupon?" aria-label="Coupon code">
+        <button class="btn secondary" id="apply-coupon">Apply</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div>Subtotal</div><div id="subtotal">₹0</div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div>Discount</div><div id="discount">-₹0</div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;font-weight:800;margin-bottom:12px"><div>Total</div><div id="grand">₹0</div></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn" id="goto-checkout">Go to Checkout</button>
+        <button class="btn secondary" id="save-wishlist">Save Cart</button>
+      </div>
+    </div>
+  </aside>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // ---------- Demo product data (would come from API in real app)
+    const products = [
+      {id:1,name:"Organic Veggie Box",price:120,img:"https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=60",category:"grocery",created:20251001},
+      {id:2,name:"Meal Kit: Pasta Primavera",price:600,img:"https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?auto=format&fit=crop&w=800&q=60",category:"meal",created:20251003},
+      {id:3,name:"Fresh Fruit Basket",price:110,img:"https://images.unsplash.com/photo-1502741126161-b048400d7c6f?auto=format&fit=crop&w=800&q=60",category:"grocery",created:20250928},
+      {id:4,name:"Meal Kit: Chicken Curry",price:950,img:"https://images.unsplash.com/photo-1604908177522-5d6d4a8d6f3b?auto=format&fit=crop&w=800&q=60",category:"meal",created:20250925},
+      {id:5,name:"Organic Eggs Dozen",price:140,img:"https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=800&q=60",category:"grocery",created:20251005},
+      {id:6,name:"Meal Kit: Tacos",price:850,img:"https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=60",category:"meal",created:20251002}
+    ];
+
+    // ---------- State
+    let state = {
+      products: products.slice(),
+      filter: 'all',
+      query: '',
+      sort: 'new',
+      cart: JSON.parse(localStorage.getItem('cart')||'[]'),
+      wishlist: JSON.parse(localStorage.getItem('wishlist')||'[]'),
+      coupon: null
+    };
+
+    // ---------- Utilities
+    const el = id => document.getElementById(id);
+    function showToast(text){ const t = el('toast'); t.textContent = text; t.classList.add('show'); clearTimeout(t._hide); t._hide = setTimeout(()=>t.classList.remove('show'),2000); }
+
+    function saveState(){ localStorage.setItem('cart', JSON.stringify(state.cart)); localStorage.setItem('wishlist', JSON.stringify(state.wishlist)); }
+
+    function formatRupee(n){ return n.toFixed(0); }
+
+    // ---------- Rendering
+    function renderProducts(){
+      const container = el('products'); container.innerHTML='';
+      // apply search
+      let list = state.products.filter(p=> (state.filter==='all' || p.category===state.filter));
+      if(state.query) list = list.filter(p=> p.name.toLowerCase().includes(state.query.toLowerCase()));
+      // sort
+      if(state.sort==='price-asc') list.sort((a,b)=>a.price-b.price);
+      else if(state.sort==='price-desc') list.sort((a,b)=>b.price-a.price);
+      else if(state.sort==='new') list.sort((a,b)=>b.created - a.created);
+
+      el('count').textContent = list.length;
+
+      list.forEach(p=>{
+        const card = document.createElement('article'); card.className='card';
+        card.innerHTML = `
+          <img loading="lazy" src="${p.img}" alt="${p.name}">
+          <div class="card-body">
+            <h3>${p.name}</h3>
+            <div style="display:flex;justify-content:space-between;align-items:center"><div class="price">₹${p.price}</div><div style="font-size:0.9rem;color:var(--muted)">${p.category}</div></div>
+            <div class="actions">
+              <div style="display:flex;gap:6px;align-items:center">
+                <button class="filter-btn" aria-label="Decrease quantity">-</button>
+                <input type="number" min="1" value="1" style="width:52px;padding:6px;border-radius:6px;border:1px solid #ddd;text-align:center" aria-label="Quantity">
+                <button class="filter-btn" aria-label="Increase quantity">+</button>
+              </div>
+              <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
+                <button class="btn add-btn">Add</button>
+                <button class="filter-btn wishlist-btn" aria-label="Add to wishlist">🤍</button>
+              </div>
+            </div>
+          </div>`;
+
+        // quantity buttons
+        const minus = card.querySelector('button[aria-label="Decrease quantity"]');
+        const plus = card.querySelector('button[aria-label="Increase quantity"]');
+        const qtyInput = card.querySelector('input[type="number"]');
+        minus.addEventListener('click', ()=>{ qtyInput.value = Math.max(1, parseInt(qtyInput.value)-1); });
+        plus.addEventListener('click', ()=>{ qtyInput.value = parseInt(qtyInput.value)+1; });
+
+        // add to cart
+        card.querySelector('.add-btn').addEventListener('click', ()=>{
+          addToCart(p.id, parseInt(qtyInput.value));
+        });
+
+        // wishlist toggle
+        const wishBtn = card.querySelector('.wishlist-btn');
+        function updateWish(){ wishBtn.textContent = state.wishlist.includes(p.id)?'❤️':'🤍'; }
+        wishBtn.addEventListener('click', ()=>{
+          if(state.wishlist.includes(p.id)){ state.wishlist = state.wishlist.filter(i=>i!==p.id); showToast('Removed from favorites'); }
+          else{ state.wishlist.push(p.id); showToast('Added to favorites'); }
+          saveState(); updateWish();
+        });
+        updateWish();
+
+        container.appendChild(card);
+      });
+    }
+
+    function renderCart(){
+      const list = el('cart-list'); list.innerHTML='';
+      let subtotal = 0;
+      state.cart.forEach(item=>{
+        const p = products.find(x=>x.id===item.id);
+        subtotal += p.price * item.qty;
+        const div = document.createElement('div'); div.className='cart-item';
+        div.innerHTML = `
+          <img src="${p.img}" alt="${p.name}">
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:center"><strong>${p.name}</strong><div>₹${p.price * item.qty}</div></div>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+              <div class="qty"><button class="dec">-</button><div style="min-width:28px;text-align:center">${item.qty}</div><button class="inc">+</button></div>
+              <button class="filter-btn remove">Remove</button>
+            </div>
+          </div>`;
+        // events
+        div.querySelector('.inc').addEventListener('click', ()=>{ item.qty++; saveState(); renderCart(); updateCartCount(); });
+        div.querySelector('.dec').addEventListener('click', ()=>{ if(item.qty>1){ item.qty--; saveState(); renderCart(); updateCartCount(); } });
+        div.querySelector('.remove').addEventListener('click', ()=>{ state.cart = state.cart.filter(c=>!(c.id===item.id)); saveState(); renderCart(); updateCartCount(); showToast('Removed from cart'); });
+
+        list.appendChild(div);
+      });
+      el('subtotal').textContent = '₹' + formatRupee(subtotal);
+      const discount = state.coupon === 'LOCAL10' ? Math.round(subtotal * 0.10) : 0;
+      el('discount').textContent = '-₹' + formatRupee(discount);
+      el('grand').textContent = '₹' + formatRupee(subtotal - discount);
+      updateCartCount();
+    }
+
+    function updateCartCount(){ const count = state.cart.reduce((s,i)=>s+i.qty,0); el('cart-count').textContent = count; }
+
+    // ---------- Actions
+    function addToCart(id, qty=1){
+      const existing = state.cart.find(c=>c.id===id);
+      if(existing){ existing.qty += qty; }
+      else{ state.cart.push({id, qty}); }
+      saveState(); renderCart(); showToast('Added to cart'); }
+
+    // coupon
+    el('apply-coupon').addEventListener('click', ()=>{
+      const code = el('coupon').value.trim().toUpperCase();
+      if(code === 'LOCAL10'){ state.coupon = 'LOCAL10'; showToast('Coupon applied: 10% off'); } else { state.coupon = null; showToast('Invalid coupon'); }
+      renderCart();
+    });
+
+    el('clear-cart').addEventListener('click', ()=>{ state.cart = []; saveState(); renderCart(); showToast('Cart cleared'); });
+    el('close-cart').addEventListener('click', ()=>{ toggleCart(false); });
+    el('cartToggle').addEventListener('click', ()=>{ toggleCart(); });
+    el('cartToggle').addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') toggleCart(); });
+
+    function toggleCart(force){ const drawer = el('cartDrawer'); const open = drawer.classList.contains('open'); if(typeof force === 'boolean') { if(force) drawer.classList.add('open'); else drawer.classList.remove('open'); } else { drawer.classList.toggle('open'); }
+      const isOpen = drawer.classList.contains('open'); document.getElementById('cartToggle').setAttribute('aria-expanded', isOpen); }
+
+    el('goto-checkout').addEventListener('click', ()=>{
+      if(state.cart.length === 0){ showToast('Cart is empty'); return; }
+      localStorage.setItem('checkout_cart', JSON.stringify(state.cart));
+      localStorage.setItem('checkout_coupon', state.coupon||'');
+      window.location.href = 'checkout.html';
+    });
+
+    // search and sort handlers
+    el('search').addEventListener('input', (e)=>{ state.query = e.target.value; renderProducts(); });
+    el('sort').addEventListener('change', (e)=>{ state.sort = e.target.value; renderProducts(); });
+
+    // filter buttons
+    document.querySelectorAll('.filter-btn[data-cat]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        document.querySelectorAll('.filter-btn[data-cat]').forEach(b=>b.classList.remove('active'));
+        e.currentTarget.classList.add('active'); state.filter = e.currentTarget.getAttribute('data-cat'); renderProducts();
+      });
+    });
+
+    // favorites toggle: shows only wishlist when pressed
+    el('favorites-toggle').addEventListener('click', (e)=>{
+      const pressed = e.currentTarget.getAttribute('aria-pressed') === 'true';
+      if(!pressed){ // show favorites
+        const favList = state.wishlist.slice();
+        state.products = products.filter(p=> favList.includes(p.id));
+        e.currentTarget.setAttribute('aria-pressed','true'); e.currentTarget.textContent = '❤️ Showing favorites';
+      } else { state.products = products.slice(); e.currentTarget.setAttribute('aria-pressed','false'); e.currentTarget.textContent = '❤️ Favorites'; }
+      renderProducts();
+    });
+
+    // save wishlist / cart
+    el('save-wishlist').addEventListener('click', ()=>{ localStorage.setItem('saved_cart', JSON.stringify(state.cart)); showToast('Cart saved locally'); });
+
+    // initial render
+    renderProducts(); renderCart();
+
+    // keep cart in localStorage when updated frequently
+    window.addEventListener('beforeunload', saveState);
+
+  </script>
+</body>
+</html>
