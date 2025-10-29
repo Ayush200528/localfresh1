@@ -1,0 +1,85 @@
+[
+  {
+    "id": 1,
+    "name": "Misal Pav",
+    "description": "Spicy sprout curry topped with farsan & onion",
+    "price": 80,
+    "category": "snacks",
+    "image": "images/misal-pav.jpg",
+    "popular": true
+  },
+  {
+    "id": 2,
+    "name": "Vada Pav",
+    "description": "Fried potato dumpling in pav with chutneys",
+    "price": 35,
+    "category": "snacks",
+    "image": "images/vada-pav.jpg",
+    "popular": true
+  },
+  {
+    "id": 3,
+    "name": "Pav Bhaji",
+    "description": "Butter-toasted pav with spicy mashed vegetables",
+    "price": 100,
+    "category": "snacks",
+    "image": "images/pav-bhaji.jpg",
+    "popular": true
+  },
+  {
+    "id": 4,
+    "name": "Poha",
+    "description": "Flattened rice cooked with onion, mustard seeds & peanuts",
+    "price": 60,
+    "category": "snacks",
+    "image": "images/poha.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Sabudana Khichdi",
+    "description": "Tapioca pearls with peanuts and green chili",
+    "price": 90,
+    "category": "snacks",
+    "image": "images/sabudana-khichdi.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Pithla Bhakri",
+    "description": "Gram flour curry with jowar bhakri",
+    "price": 120,
+    "category": "meals",
+    "image": "images/pithla-bhakri.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Thalipeeth",
+    "description": "Multi-grain flatbread served with curd",
+    "price": 80,
+    "category": "snacks",
+    "image": "images/thalipeeth.jpg"
+  },
+  {
+    "id": 8,
+    "name": "Modak",
+    "description": "Sweet steamed dumpling with coconut filling",
+    "price": 70,
+    "category": "desserts",
+    "image": "images/modak.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Kanda Bhaji",
+    "description": "Crispy onion fritters",
+    "price": 50,
+    "category": "snacks",
+    "image": "images/kanda-bhaji.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Solkadhi",
+    "description": "Refreshing kokum-coconut drink",
+    "price": 40,
+    "category": "drinks",
+    "image": "images/solkadhi.jpg"
+  }
+]

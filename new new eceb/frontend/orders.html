@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - LocalBite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-utensils"></i>
+                    <span>LocalBite</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></a></li>
+                    <li><a href="login.html" class="login-btn" id="auth-btn">Login</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="orders-page">
+        <div class="container">
+            <div class="orders-header">
+                <h1>My Orders</h1>
+                <p>Track your recent orders and reorder your favorites</p>
+            </div>
+
+            <div class="orders-container">
+                <div class="orders-sidebar">
+                    <div class="user-profile">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h4 id="user-name">Guest User</h4>
+                            <p id="user-email">Login to view your orders</p>
+                        </div>
+                    </div>
+                    
+                    <nav class="orders-nav">
+                        <a href="#" class="nav-item active">
+                            <i class="fas fa-clipboard-list"></i>
+                            All Orders
+                        </a>
+                        <a href="#" class="nav-item">
+                            <i class="fas fa-clock"></i>
+                            Upcoming
+                        </a>
+                        <a href="#" class="nav-item">
+                            <i class="fas fa-check-circle"></i>
+                            Completed
+                        </a>
+                        <a href="#" class="nav-item">
+                            <i class="fas fa-times-circle"></i>
+                            Cancelled
+                        </a>
+                    </nav>
+
+                    <div class="orders-stats">
+                        <h4>Order Stats</h4>
+                        <div class="stat-item">
+                            <span>Total Orders</span>
+                            <strong id="total-orders">0</strong>
+                        </div>
+                        <div class="stat-item">
+                            <span>This Month</span>
+                            <strong id="month-orders">0</strong>
+                        </div>
+                        <div class="stat-item">
+                            <span>Total Spent</span>
+                            <strong id="total-spent">₹0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="orders-content">
+                    <div class="orders-actions">
+                        <div class="search-orders">
+                            <input type="text" placeholder="Search orders..." id="orders-search">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="filter-orders">
+                            <select id="orders-filter">
+                                <option value="all">All Orders</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                                <option value="3months">Last 3 Months</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="orders-list" id="orders-list">
+                        <div class="empty-orders" id="empty-orders">
+                            <div class="empty-state">
+                                <i class="fas fa-clipboard-list"></i>
+                                <h3>No Orders Yet</h3>
+                                <p>You haven't placed any orders yet. Start exploring our menu!</p>
+                                <a href="menu.html" class="btn btn-primary">Browse Menu</a>
+                            </div>
+                        </div>
+
+                        <div class="orders-container" id="orders-container" style="display: none;">
+                            <!-- Orders will be loaded here by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="orders-help">
+                        <div class="help-card">
+                            <i class="fas fa-question-circle"></i>
+                            <div>
+                                <h4>Need help with an order?</h4>
+                                <p>Contact our support team for any order-related queries</p>
+                                <div class="help-contacts">
+                                    <span><i class="fas fa-phone"></i> +91 98765 43210</span>
+                                    <span><i class="fas fa-envelope"></i> support@localbite.com</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LocalBite</h3>
+                    <p>Navi Mumbai's Authentic Maharashtrian Cloud Kitchen</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="menu.html">Menu</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> Navi Mumbai, Maharashtra</p>
+                    <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                    <p><i class="fas fa-envelope"></i> hello@localbite.com</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LocalBite. Developed with ❤️ by Siddhi, Aatmaja, Ayush, Sanskar</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/orders.js"></script>
+</body>
+</html>

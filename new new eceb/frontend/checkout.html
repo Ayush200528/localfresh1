@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - LocalBite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-utensils"></i>
+                    <span>LocalBite</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></a></li>
+                    <li><a href="login.html" class="login-btn" id="auth-btn">Login</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="checkout-page">
+        <div class="container">
+            <div class="checkout-header">
+                <h1>Checkout</h1>
+                <div class="checkout-steps">
+                    <div class="step active">1. Cart</div>
+                    <div class="step active">2. Details</div>
+                    <div class="step">3. Payment</div>
+                    <div class="step">4. Confirm</div>
+                </div>
+            </div>
+            
+            <div class="checkout-container">
+                <div class="checkout-form">
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Delivery Information</h3>
+                        <form id="delivery-form">
+                            <div class="form-group">
+                                <label for="name">Full Name *</label>
+                                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" required placeholder="Enter your 10-digit mobile number">
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Delivery Address *</label>
+                                <textarea id="address" name="address" rows="3" required placeholder="House no, Building, Street, Area"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="area">Area *</label>
+                                <select id="area" name="area" required>
+                                    <option value="">Select your area</option>
+                                    <option value="panvel">Panvel</option>
+                                    <option value="nerul">Nerul</option>
+                                    <option value="vashi">Vashi</option>
+                                    <option value="kharghar">Kharghar</option>
+                                    <option value="kamothe">Kamothe</option>
+                                    <option value="seawoods">Seawoods</option>
+                                    <option value="sanpada">Sanpada</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="landmark">Landmark (Optional)</label>
+                                <input type="text" id="landmark" name="landmark" placeholder="Nearby landmark">
+                            </div>
+                            <div class="form-group">
+                                <label for="instructions">Special Instructions (Optional)</label>
+                                <textarea id="instructions" name="instructions" rows="2" placeholder="Any special delivery instructions..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+                        <div class="payment-methods">
+                            <div class="payment-option">
+                                <input type="radio" id="cod" name="payment" value="cod" checked>
+                                <label for="cod">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <div>
+                                        <span class="payment-title">Cash on Delivery</span>
+                                        <span class="payment-desc">Pay when you receive your order</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="upi" name="payment" value="upi">
+                                <label for="upi">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <div>
+                                        <span class="payment-title">UPI Payment</span>
+                                        <span class="payment-desc">Pay using UPI apps</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="card" name="payment" value="card">
+                                <label for="card">
+                                    <i class="fas fa-credit-card"></i>
+                                    <div>
+                                        <span class="payment-title">Credit/Debit Card</span>
+                                        <span class="payment-desc">Pay using card</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="wallet" name="payment" value="wallet">
+                                <label for="wallet">
+                                    <i class="fas fa-wallet"></i>
+                                    <div>
+                                        <span class="payment-title">Wallet</span>
+                                        <span class="payment-desc">Pay using digital wallet</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-place-order" id="place-order-btn">
+                        <i class="fas fa-lock"></i> Place Order
+                    </button>
+                    
+                    <div class="secure-checkout">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure checkout. Your information is safe with us.</span>
+                    </div>
+                </div>
+
+                <div class="order-summary">
+                    <h3>Order Summary</h3>
+                    <div class="order-items" id="order-items">
+                        <!-- Order items will be loaded from cart -->
+                    </div>
+                    <div class="summary-details">
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span id="order-subtotal">₹0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Delivery Fee:</span>
+                            <span id="order-delivery">₹30</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Tax (5%):</span>
+                            <span id="order-tax">₹0</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total Amount:</span>
+                            <span id="order-total">₹30</span>
+                        </div>
+                    </div>
+                    
+                    <div class="delivery-time">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <strong>Delivery in 45 minutes</strong>
+                            <p>Order now to get it delivered quickly</p>
+                        </div>
+                    </div>
+                    
+                    <div class="support-info">
+                        <h4>Need help?</h4>
+                        <p><i class="fas fa-phone"></i> Call us: +91 98765 43210</p>
+                        <p><i class="fas fa-envelope"></i> Email: support@localbite.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LocalBite</h3>
+                    <p>Navi Mumbai's Authentic Maharashtrian Cloud Kitchen</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="menu.html">Menu</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> Navi Mumbai, Maharashtra</p>
+                    <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                    <p><i class="fas fa-envelope"></i> hello@localbite.com</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LocalBite. Developed with ❤️ by Siddhi, Aatmaja, Ayush, Sanskar</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/checkout.js"></script>
+</body>
+</html>
