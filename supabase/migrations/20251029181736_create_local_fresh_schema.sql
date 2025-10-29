@@ -239,8 +239,8 @@ CREATE POLICY "Users can delete own favorites"
 -- Insert initial products data
 INSERT INTO products (name, category, description, price, image_url) VALUES
   -- Food items
-  ('Vada Pav', 'food', 'Classic Mumbai street food - spiced potato fritter in a bun', 20, '/dist/assets/image/vada pav.jpg'),
-  ('Pav Bhaji', 'food', 'Spicy vegetable curry served with buttered bread rolls', 60, '/dist/assets/image/misal pav.jpg'),
+  ('Vada Pav', 'food', 'Classic Mumbai street food - spiced potato fritter in a bun', 20, 'https://images.pexels.com/photos/5560763/pexels-photo-5560763.jpeg'),
+  ('Pav Bhaji', 'food', 'Spicy vegetable curry served with buttered bread rolls', 60, 'https://images.pexels.com/photos/6287518/pexels-photo-6287518.jpeg'),
   ('Misal Pav', 'food', 'Spicy sprout curry topped with farsan and served with pav', 50, 'https://images.pexels.com/photos/5560763/pexels-photo-5560763.jpeg'),
   ('Sev Puri', 'food', 'Crispy puris topped with potatoes, chutneys and sev', 30, 'https://images.pexels.com/photos/1639562/pexels-photo-1639562.jpeg'),
   ('Pani Puri', 'food', 'Crispy hollow puris filled with tangy tamarind water', 25, 'https://images.pexels.com/photos/3609856/pexels-photo-3609856.jpeg'),
